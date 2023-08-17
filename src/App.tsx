@@ -1,6 +1,6 @@
 import './App.css'
 import { useEffect, useState } from "react";
-import axios, { post } from "axios";
+import axios from "axios";
 
 // interface tokenRes {
 //   access_token: string,
@@ -13,36 +13,9 @@ function App() {
   const [token, setToken] = useState({access_token: "", expires_in: 0})
 
   useEffect(() => {
-    if (localStorage.getItem('code_verifier')) {
-      // const params = new URLSearchParams({
-      //   client_id: import.meta.env.VITE_SPOTIFY_CLIENT_ID,
-      //   client_secret: import.meta.env.VITE_SPOTIFY_CLIENT_SECRET,
-      //   grant_type: 'client_credentials'
-      // })
-      const urlParams = new URLSearchParams(window.location.search);
-      const code = urlParams.get('code');
-
-      const codeVerifier = localStorage.getItem('code_verifier');
-
-      const body = new URLSearchParams({
-        grant_type: 'authorization_code',
-        code: code,
-        redirect_uri: 'http://localhost:5173',
-        client_id: import.meta.env.VITE_SPOTIFY_CLIENT_SECRET,
-        code_verifier: codeVerifier
-      })
-
-      axios.post('https://accounts.spotify.com/api/token', body)
-        .then(res => console.log("second log: ", res))
-        .catch(error => console.log("Error: ", error))
+    if (localStorage.getItem('code_verifier') && !(localStorage.getItem('access_token'))) {
+      authorization()
     }
-
-
-    // console.log(params)
-    // axios.post('https://accounts.spotify.com/api/token', params).then(res => {
-    //   setToken(res.data);
-    // })
-    //   .catch(err => console.log("Error: ", err))
   }, [])
 
   const generateRandomString = (length: number): string => {
@@ -95,6 +68,45 @@ function App() {
     })
   }
 
+  const authorization = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code');
+    const codeVerifier = localStorage.getItem('code_verifier');
+
+    const params = new URLSearchParams({
+      grant_type: 'authorization_code',
+      code: code,
+      redirect_uri: 'http://localhost:5173',
+      client_id: import.meta.env.VITE_SPOTIFY_CLIENT_ID,
+      code_verifier: codeVerifier
+    })
+
+    axios.post('https://accounts.spotify.com/api/token', {}, {
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded"
+      },
+      params: params
+    })
+      .then(res => {
+        localStorage.setItem('access_token', res.data.access_token)
+        localStorage.setItem('expires_in', res.data.expires_in)
+      })
+      .catch(error => console.log('error: ', error))
+  }
+
+  const getProfile = async (e) => {
+    e.preventDefault();
+    const accessToken = localStorage.getItem('access_token');
+
+    const response = await axios.get('https://api.spotify.com/v1/me', {
+      headers: {
+        Authorization: 'Bearer ' + accessToken
+      }
+    })
+
+    console.log('My data: ', response)
+  }
+
   const artistSearch = async (event) => {
     event.preventDefault();
     try {
@@ -112,6 +124,8 @@ function App() {
       <p>{token.access_token}</p>
       <button onClick={artistSearch}>search</button>
       <button onClick={login}>Login</button>
+      <button onClick={authorization}>Auth</button>
+      <button onClick={getProfile}>Get Profile</button>
     </>
   )
 }
