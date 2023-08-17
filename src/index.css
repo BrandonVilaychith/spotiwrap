@@ -347,3 +347,24 @@ template {
 [hidden] {
   display: none;
 }
+
+.custom-shape-divider-bottom-1692302595 {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+}
+
+.custom-shape-divider-bottom-1692302595 svg {
+  position: relative;
+  display: block;
+  width: calc(180% + 1.3px);
+  height: 267px;
+  transform: rotateY(180deg);
+}
+
+.custom-shape-divider-bottom-1692302595 .shape-fill {
+  fill: #1DD05D;
+}
