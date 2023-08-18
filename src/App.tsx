@@ -37,11 +37,13 @@ function App() {
 
   return (
     <>
-      <div className="container">
-        <h1>Hello</h1>
-        <button onClick={login}>Login</button>
-        <button onClick={getTop}>Get Top Artists</button>
-        <Link to={"/about"}>About Page</Link>
+      <div className="background">
+        <div className="container">
+          <h1>Hello</h1>
+          <button onClick={login}>Login</button>
+          <button onClick={getTop}>Get Top Artists</button>
+          <Link to={"/about"}>About Page</Link>
+        </div>
       </div>
 
       <div className="custom-shape-divider-bottom-1692302595">
