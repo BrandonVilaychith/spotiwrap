@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import {login, authorization} from "./Auth/Login";
+import { Link } from "react-router-dom";
 
 function App() {
   const [artists, setArtists] = useState([])
@@ -36,9 +37,13 @@ function App() {
 
   return (
     <>
-      <h1>Hello</h1>
-      <button onClick={login}>Login</button>
-      <button onClick={getTop}>Get Top Artists</button>
+      <div className="container">
+        <h1>Hello</h1>
+        <button onClick={login}>Login</button>
+        <button onClick={getTop}>Get Top Artists</button>
+        <Link to={"/about"}>About Page</Link>
+      </div>
+
       <div className="custom-shape-divider-bottom-1692302595">
         <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
           <path
